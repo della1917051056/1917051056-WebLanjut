@@ -10,8 +10,8 @@
     <img class="animation__shake" src="/assets/adminlte/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
   </div>
 
-   <!-- Navbar -->
-   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -46,7 +46,6 @@
           <a href="#" class="d-block">Della Hayu Enggarini</a>
         </div>
       </div>
-
       <!-- SidebarSearch Form -->
       <div class="form-inline">
         <div class="input-group" data-widget="sidebar-search">
@@ -106,57 +105,67 @@
     <!-- /.content-header -->
 
     <!-- Main Content -->
-    <section class="content">
-    <?php if (session()->getFlashdata('success')) : ?>
-        <div class="alert alert-success" role="alert">
-          <?= session()->getFlashdata('success'); ?>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                Form Edit Data
+                <div class="card-body">
+                <form action="/admin/posts/update/<?=$post['slug'];?>" method="post">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="judul">Judul Postingan</label>
+                                <input type="text" class="form-control <?= ($validation->hasError('judul')) ? 'is-invalid' : ''; ?>" id="judul" name="judul" value="<?= (old('judul')) ? old('judul') : $post['judul'];?>">
+                                <?php if($validation->hasError('judul')) : ?>
+                                <div class="invalid-feedback">
+                                  <?= $validation->getError("judul"); ?>
+                                </div>
+                                <?php endif; ?>         
+                            </div>
+                            <div class="form-group">
+                                <label for="slug">Slug</label>
+                                <input type="text" class="form-control <?= ($validation->hasError('slug')) ? 'is-invalid' : ''; ?>" id="slug" name="slug" value="<?= (old('slug')) ? old('slug') : $post['slug'];?>" disabled>
+                                <?php if($validation->hasError('slug')) : ?>
+                                <div class="invalid-feedback">
+                                  <?= $validation->getError("slug"); ?>
+                                </div>
+                                <?php endif; ?>  
+                              </div>
+                            <div class="form-group">
+                                <label for="kategori">Kategori Postingan</label>
+                                <input type="text" class="form-control <?= ($validation->hasError('kategori')) ? 'is-invalid' : ''; ?>" id="kategori" name="kategori" value="<?= (old('kategori')) ? old('kategori') : $post['kategori'];?>">
+                                <?php if($validation->hasError('kategori')) : ?>
+                                <div class="invalid-feedback">
+                                  <?= $validation->getError("kategori"); ?>
+                                </div>   
+                                <?php endif; ?>      
+                            </div>
+                            <div class="form-group">
+                                <label for="author">Author</label>
+                                <input type="text" class="form-control <?= ($validation->hasError('author')) ? 'is-invalid' : ''; ?>" id="author" name="author" value="<?= (old('author')) ? old('author') : $post['author'];?>"> 
+                                <?php if($validation->hasError('author')) : ?>
+                                <div class="invalid-feedback">
+                                  <?= $validation->getError("author"); ?>
+                                </div>        
+                                <?php endif; ?>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Edit Data
+                            </button>
+                        </div>
+                        <div class="col-md-8">
+                            <label for="deskripsi"> Deskripsi Postingan</label><br>
+                            <textarea name="deskripsi" id="deskripsi" class="form-control <?= ($validation->hasError('deskripsi')) ? 'is-invalid' : ''; ?>">
+                            <?=old("deskripsi");?></textarea>
+                            <?php if($validation->hasError('deskripsi')) : ?>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                </form>
+            </div>
         </div>
-      <?php endif; ?>
-      <div class="container-fluid">
-        <a href="/admin/posts/create" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Data</a>
-        <div class="card mt-3">
-          <div class="card-header">
-            Daftar Postingan
-          </div>
-          <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-striped text-center">
-              <thead>
-                <tr>
-                  <th scope="col">No.</h>
-                  <th scope="col">Judul</h>
-                  <th scope="col">slug</h>
-                  <th scope="col">author</h>
-                  <th scope="col">kategori</h>
-                  <th scope="col">action</h>
-                </tr>
-              </thead>
-              <tbody>
-                <?php foreach ($posts as $i => $post) : ?>
-                  <tr>
-                  <th scope="row"><?= $i + 1; ?></th>
-                  <td><?= $post['judul'] ?></td>
-                  <td><?= $post['slug'] ?></td>
-                  <td><?= $post['author'] ?></td>
-                  <td><?= $post['kategori'] ?></td>
-                  <td>
-                      <a href="posts/edit/<?= $post['post_id']; ?>" class="btn btn-sm btn-warning me-1"><i class="fas fa-edit"></i> Edit</a>
-
-                      <form action="posts/<?= $post['post_id']; ?>" method="post" class="d-inline">
-                      <?= csrf_field(); ?>
-                      <input type="hidden" name="_method" value="delete">
-                      <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ?');"><i class="fas fa-trash"></i> Hapus</button>
-                      </form>
-                  </td>
-                </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
     </div>
-    <!-- /.content -->
+      <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
@@ -175,4 +184,10 @@
 </div>
 <!-- ./wrapper -->
 
+<?= $this->endSection(); ?>
+
+<?= $this->section('myscript'); ?>
+<script>
+    $('#deskripsi').summernote()
+</script>
 <?= $this->endSection(); ?>
